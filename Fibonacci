@@ -1,0 +1,52 @@
+import java.util.Scanner;
+
+public class Fibonacci {
+
+    // Iteratively using memoization
+    public static int iStepFibonacci(int n) {
+        // Using a dynamic array (ArrayList) to store Fibonacci values
+        int[] f = new int[n + 1]; // Array to store Fibonacci numbers
+        f[0] = 0;
+        f[1] = 1;
+        
+        // Fill the array with Fibonacci values up to n
+        for (int i = 2; i <= n; i++) {
+            f[i] = f[i - 1] + f[i - 2];  // Fibonacci relation
+        }
+        return f[n]; // Return the nth Fibonacci number
+    }
+
+    static int rSteps = 0; // Counter for steps in the recursive method
+
+    // Recursively calculating Fibonacci
+    public static int rStepFibonacci(int n) {
+        rSteps++; // Increment step counter
+        if (n == 0) return 0; // Base case: Fibonacci(0) = 0
+        if (n == 1) return 1; // Base case: Fibonacci(1) = 1
+        
+        // Recursive step: Fibonacci(n) = Fibonacci(n-1) + Fibonacci(n-2)
+        return rStepFibonacci(n - 1) + rStepFibonacci(n - 2);
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        
+        // Read input n
+        System.out.print("Enter the value of n: ");
+        int n = sc.nextInt();
+        
+        // Calculate Fibonacci value using recursive approach
+        int fibRecursive = rStepFibonacci(n);
+        
+        // Calculate Fibonacci value using iterative approach
+        int fibIterative = iStepFibonacci(n);
+        
+        // Output results
+        System.out.println("Fibonacci Value (Recursive): " + fibRecursive);
+        System.out.println("Fibonacci Value (Iterative): " + fibIterative);
+        System.out.println("Steps required using Iteration: " + n);  // Iterative approach takes exactly n steps
+        System.out.println("Steps required using Recursion: " + rSteps);
+        
+        sc.close();
+    }
+}
