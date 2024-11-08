@@ -1,0 +1,83 @@
+public class EightQueens {
+
+    // Dimension of the chess board
+    private static final int SIZE = 8;
+    private static int[][] board = new int[SIZE][SIZE];
+
+    public static void main(String[] args) {
+        // Place the first Queen in the top-left corner
+        board[0][0] = 1;
+        
+        // Try to place the remaining Queens starting from the second row
+        if (solve(1)) {
+            printBoard();
+        } else {
+            System.out.println("Solution does not exist.");
+        }
+    }
+
+    // Method to solve the 8-Queens problem using backtracking
+    private static boolean solve(int row) {
+        // Base case: If all queens are placed, return true
+        if (row == SIZE) {
+            return true;
+        }
+        
+        for (int col = 0; col < SIZE; col++) {
+            // Check if placing Queen at (row, col) is safe
+            if (isSafe(row, col)) {
+                board[row][col] = 1; // Place Queen
+                
+                // Recursively place the remaining Queens
+                if (solve(row + 1)) {
+                    return true;
+                }
+                
+                // If placing Queen at (row, col) leads to no solution, backtrack
+                board[row][col] = 0; // Remove Queen
+            }
+        }
+        
+        return false; // No safe position found for this row
+    }
+
+    // Method to check if placing Queen at (row, col) is safe
+    private static boolean isSafe(int row, int col) {
+        // Check column above the current row
+        for (int i = 0; i < row; i++) {
+            if (board[i][col] == 1) {
+                return false;
+            }
+        }
+
+        // Check upper left diagonal
+        for (int i = row, j = col; i >= 0 && j >= 0; i--, j--) {
+            if (board[i][j] == 1) {
+                return false;
+            }
+        }
+
+        // Check upper right diagonal
+        for (int i = row, j = col; i >= 0 && j < SIZE; i--, j++) {
+            if (board[i][j] == 1) {
+                return false;
+            }
+        }
+
+        return true; // Position is safe
+    }
+
+    // Method to print the chess board
+    private static void printBoard() {
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                if (board[i][j] == 1) {
+                    System.out.print("[Q] ");
+                } else {
+                    System.out.print("[ ] ");
+                }
+            }
+            System.out.println();
+        }
+    }
+}
