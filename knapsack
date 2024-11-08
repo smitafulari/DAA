@@ -1,0 +1,72 @@
+import java.util.*;
+
+public class FractionalKnapsack {
+
+    // Comparator to sort items by value-to-weight ratio in descending order
+    static class ItemComparator implements Comparator<Item> {
+        @Override
+        public int compare(Item item1, Item item2) {
+            double v1 = (double) item1.value / item1.weight;
+            double v2 = (double) item2.value / item2.weight;
+            // Sorting in descending order by value-to-weight ratio
+            return Double.compare(v2, v1);
+        }
+    }
+
+    // Item class to store value and weight of each item
+    static class Item {
+        int value, weight;
+        
+        // Constructor to initialize value and weight of an item
+        Item(int value, int weight) {
+            this.value = value;
+            this.weight = weight;
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // Input number of items
+        System.out.print("Enter the number of items: ");
+        int n = scanner.nextInt();
+        List<Item> items = new ArrayList<>();
+
+        // Input value and weight of each item
+        for (int i = 0; i < n; i++) {
+            System.out.print("Enter value and weight of item " + (i + 1) + ": ");
+            int value = scanner.nextInt();
+            int weight = scanner.nextInt();
+            items.add(new Item(value, weight));
+        }
+
+        // Input the total weight capacity of the knapsack
+        System.out.print("Enter the maximum capacity of the knapsack: ");
+        int capacity = scanner.nextInt();
+
+        // Sort items by their value-to-weight ratio in descending order
+        items.sort(new ItemComparator());
+
+        double maxValue = 0.0; // Initialize total maximum value that can be obtained
+
+        // Loop through each item
+        for (Item item : items) {
+            if (capacity >= item.weight) {
+                // If the knapsack can carry the entire item weight
+                maxValue += item.value; // Add the full item value
+                capacity -= item.weight; // Decrease knapsack capacity by item's weight
+            } else {
+                // If the knapsack cannot carry the entire item weight, take fraction
+                double valuePerWeight = (double) item.value / item.weight; // Value-to-weight ratio
+                maxValue += valuePerWeight * capacity; // Add fraction of the item's value
+                capacity = 0; // Knapsack is full
+                break; // No more items can be added
+            }
+        }
+
+        // Output the maximum value obtained
+        System.out.println("Maximum value that can be obtained in the knapsack: " + maxValue);
+
+        scanner.close();
+    }
+}
