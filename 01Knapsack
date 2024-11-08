@@ -1,0 +1,40 @@
+import java.util.Arrays;
+
+public class Knapsack01 {
+
+    public static void main(String[] args) {
+        int capacity = 10; // Maximum capacity of the knapsack
+        int items = 4; // Number of items
+
+        int[] value = {0, 3, 7, 2, 9}; // Values of the items (starting from index 1)
+        int[] weight = {0, 2, 2, 4, 5}; // Weights of the items (starting from index 1)
+
+        // DP array to store maximum profit for each item and capacity
+        int[][] dp = new int[items + 1][capacity + 1];
+
+        // Initialize DP array and solve for maximum profit
+        for (int i = 0; i <= items; i++) {
+            for (int j = 0; j <= capacity; j++) {
+                if (i == 0 || j == 0) {
+                    // If there's no item or no capacity, profit is 0
+                    dp[i][j] = 0;
+                } else if (weight[i] <= j) {
+                    // Choose the maximum between not including the item or including it
+                    dp[i][j] = Math.max(dp[i - 1][j], value[i] + dp[i - 1][j - weight[i]]);
+                } else {
+                    // If current item weight exceeds capacity, don't include the item
+                    dp[i][j] = dp[i - 1][j];
+                }
+            }
+        }
+
+        // Output the maximum profit that can be earned
+        System.out.println("Maximum Profit Earned: " + dp[items][capacity]);
+    }
+}
+
+/*
+0/1 Knapsack:
+Time Complexity: O(N*W), where N is the number of items and W is the knapsack capacity.
+Auxiliary Space: O(N*W), for the 2-D DP array of size N*W.
+*/
