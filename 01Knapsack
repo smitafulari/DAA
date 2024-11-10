@@ -1,35 +1,54 @@
-import java.util.Arrays;
+import java.util.Scanner;
 
-public class Knapsack01 {
+public class Knapsack {
 
-    public static void main(String[] args) {
-        int capacity = 10; // Maximum capacity of the knapsack
-        int items = 4; // Number of items
-
-        int[] value = {0, 3, 7, 2, 9}; // Values of the items (starting from index 1)
-        int[] weight = {0, 2, 2, 4, 5}; // Weights of the items (starting from index 1)
-
-        // DP array to store maximum profit for each item and capacity
+    // Method to compute the maximum profit for 0/1 Knapsack problem
+    public static int knapsack(int capacity, int items, int[] prices, int[] weights) {
+        // Create a DP table to store the maximum profit for each subproblem
         int[][] dp = new int[items + 1][capacity + 1];
 
-        // Initialize DP array and solve for maximum profit
-        for (int i = 0; i <= items; i++) {
-            for (int j = 0; j <= capacity; j++) {
-                if (i == 0 || j == 0) {
-                    // If there's no item or no capacity, profit is 0
-                    dp[i][j] = 0;
-                } else if (weight[i] <= j) {
-                    // Choose the maximum between not including the item or including it
-                    dp[i][j] = Math.max(dp[i - 1][j], value[i] + dp[i - 1][j - weight[i]]);
+        // Fill the DP table
+        for (int i = 1; i <= items; i++) {
+            for (int w = 0; w <= capacity; w++) {
+                if (weights[i - 1] <= w) {
+                    // If the current item's weight is less than or equal to the remaining capacity
+                    dp[i][w] = Math.max(dp[i - 1][w], prices[i - 1] + dp[i - 1][w - weights[i - 1]]);
                 } else {
-                    // If current item weight exceeds capacity, don't include the item
-                    dp[i][j] = dp[i - 1][j];
+                    // Else, we cannot include the current item
+                    dp[i][w] = dp[i - 1][w];
                 }
             }
         }
 
-        // Output the maximum profit that can be earned
-        System.out.println("Maximum Profit Earned: " + dp[items][capacity]);
+        // Return the maximum profit that can be earned
+        return dp[items][capacity];
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // Take the knapsack capacity and number of items as input
+        System.out.print("Enter the capacity of the knapsack: ");
+        int capacity = scanner.nextInt();
+        System.out.print("Enter the number of items: ");
+        int items = scanner.nextInt();
+
+        // Arrays to store prices and weights of the items
+        int[] prices = new int[items];
+        int[] weights = new int[items];
+
+        // Input the value and weight for each item
+        for (int i = 0; i < items; i++) {
+            System.out.print("Enter value and weight for item " + (i + 1) + ": ");
+            prices[i] = scanner.nextInt();
+            weights[i] = scanner.nextInt();
+        }
+
+        // Call the knapsack function and output the result
+        int maxProfit = knapsack(capacity, items, prices, weights);
+        System.out.println("Maximum Profit Earned: " + maxProfit);
+        
+        scanner.close();
     }
 }
 
